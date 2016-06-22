@@ -26,10 +26,32 @@ public class JdbcUtil {
 			e.printStackTrace();
 		}
 	}
+	@Deprecated
+	/**
+	 * 会发生sql注意，已废弃
+	 * @return
+	 */
 	public static Statement getStateMent(){
 		try {
 			connection=DriverManager.getConnection(URL,USER,PASSWORD);
 			st=connection.createStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			try {
+				if(connection!=null)connection.close();
+				if(st!=null)st.close();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		return st;
+	}
+	public static Statement getPrepareStateMent(String sql){
+		try {
+			connection=DriverManager.getConnection(URL,USER,PASSWORD);
+			st=connection.prepareStatement(sql);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
