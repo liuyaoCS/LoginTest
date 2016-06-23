@@ -27,7 +27,7 @@ public class AccountServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		if(request.getSession().getAttribute("user")==null){
 			//request.getRequestDispatcher("/LoginServlet").forward(request, response);
-			response.sendRedirect("/LoginTest/LoginServlet");
+			response.sendRedirect("/UserSystem/LoginServlet");
 			return;
 		}
 		User currentUser=(User) request.getSession().getAttribute("user");
