@@ -2,14 +2,14 @@ package cn.ly.Service;
 
 import java.sql.SQLException;
 
-import cn.ly.dao.UserDao;
-import cnly.bean.User;
+import cn.ly.bean.User;
+import cn.ly.dao.LoginDao;
 
-public class UserService {
+public class LoginService {
 
 	public User login(User user) throws SQLException {
 		// TODO Auto-generated method stub
-		UserDao dao=new UserDao();
+		LoginDao dao=new LoginDao();
 		User exitUser=dao.login(user);
 		return exitUser;
 	}

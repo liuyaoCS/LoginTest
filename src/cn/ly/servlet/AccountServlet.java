@@ -1,22 +1,23 @@
 package cn.ly.servlet;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
+import javax.security.auth.login.AccountException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cn.ly.Service.LoginService;
+import cn.ly.Service.AccountService;
 import cn.ly.bean.User;
+import cn.ly.dao.LoginDao;
 
 /**
- * Servlet implementation class LoginServlet
+ * Servlet implementation class AccountServlet
  */
-@WebServlet("/LoginServlet")
-public class LoginServlet extends HttpServlet {
+@WebServlet("/AccountServlet")
+public class AccountServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -24,28 +25,27 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String username=request.getParameter("username");
-		String password=request.getParameter("password");
+		if(request.getSession().getAttribute("user")==null){
+			//request.getRequestDispatcher("/LoginServlet").forward(request, response);
+			response.sendRedirect("/LoginTest/LoginServlet");
+			return;
+		}
+		User currentUser=(User) request.getSession().getAttribute("user");
+		String username=currentUser.getUsername();
+		String userTo=request.getParameter("userto");
+		String money=request.getParameter("money");
 		
-		User user=new User(username,password);
 		
+		AccountService service=new AccountService();
 		try {
-			User exitUser=new LoginService().login(user);
-			if(exitUser!=null){
-				//response.getWriter().println("username:"+exitUser.getUsername());
-				request.getSession().setAttribute("user", exitUser);
-				request.getRequestDispatcher("/account.jsp").forward(request, response);
-			}else{
-				//response.getWriter().println("username or password error");
-				request.setAttribute("loginmessage", "username or password error");
-				request.getRequestDispatcher("/index.jsp").forward(request, response);
-			}
-		} catch (SQLException e) {
+			service.transfer(username,userTo,money);
+			response.getWriter().println("transfer success!");
+		} catch (AccountException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			response.getWriter().println("transfer error!");
 		}
 		
-		//response.getWriter().println("username:"+username);
 	}
 
 	/**

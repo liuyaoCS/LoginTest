@@ -6,10 +6,10 @@
   </head>
   
   <body>
-   <form action="/UserSystem/LoginServlet" method="post">
-   	username:<input type="text" name="username"></br>
-   	password:<input type="text" name="password"></br>
-   	<input type="submit" value="submit">
+   <form action="/UserSystem/AccountServlet" method="post">
+   	to user:<input type="text" name="userto"></br>
+   	money:<input type="text" name="money"></br>
+   	<input type="submit" value="transfer">
    </form>
    <%--
    		String message=(String)request.getAttribute("loginmessage");

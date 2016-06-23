@@ -1,4 +1,4 @@
-package cnly.bean;
+package cn.ly.bean;
 
 public class User {
 	private String username;

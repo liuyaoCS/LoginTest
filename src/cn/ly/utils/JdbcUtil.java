@@ -14,6 +14,8 @@ public class JdbcUtil {
 	
 	private static Connection connection=null;
 	private static Statement st=null;
+	
+	private static ThreadLocal<Connection> tl=new ThreadLocal<Connection>();
 	static{
 		DRIVERCLASS=ResourceBundle.getBundle("db").getString("driver");
 		URL=ResourceBundle.getBundle("db").getString("url");
@@ -26,6 +28,14 @@ public class JdbcUtil {
 			e.printStackTrace();
 		}
 	}
+	public static Connection getConnection() throws SQLException{
+		connection=tl.get();
+		if(connection==null){
+			connection=DriverManager.getConnection(URL,USER,PASSWORD);
+			tl.set(connection);
+		}
+		return connection;
+	}
 	@Deprecated
 	/**
 	 * 会发生sql注意，已废弃
@@ -33,7 +43,7 @@ public class JdbcUtil {
 	 */
 	public static Statement getStateMent(){
 		try {
-			connection=DriverManager.getConnection(URL,USER,PASSWORD);
+			connection=getConnection(); 
 			st=connection.createStatement();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -50,7 +60,7 @@ public class JdbcUtil {
 	}
 	public static Statement getPrepareStateMent(String sql){
 		try {
-			connection=DriverManager.getConnection(URL,USER,PASSWORD);
+			connection=getConnection(); 
 			st=connection.prepareStatement(sql);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -66,9 +76,16 @@ public class JdbcUtil {
 		return st;
 	}
 	
-	public static void release(){
+	public static void releaseConnection(){
 		try {
 			if(connection!=null)connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public static void releaseStatement(){
+		try {
 			if(st!=null)st.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
