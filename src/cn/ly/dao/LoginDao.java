@@ -7,11 +7,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.enterprise.inject.New;
+
+import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanHandler;
+
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 //import com.mysql.jdbc.PreparedStatement;
 
 
+
+
+
+
+
 import cn.ly.bean.User;
+import cn.ly.utils.DataSourceUtil;
 import cn.ly.utils.JdbcUtil;
 
 public class LoginDao {
@@ -22,7 +34,16 @@ public class LoginDao {
 		//exitUser = normalStatement(user, exitUser);
 		//exitUser = PrepareStatement(user, exitUser);
 		exitUser = CpDataSourceAction(user, exitUser);
+		//exitUser = dbUtilsAction(user);
 		
+		return exitUser;
+	}
+
+	private User dbUtilsAction(User user) throws SQLException {
+		User exitUser;
+		QueryRunner qr=new QueryRunner(DataSourceUtil.getDataSource());
+		String sql="select * from userAccount where name=? and password=?";
+		exitUser=qr.query(sql, new BeanHandler<User>(User.class), user.getUsername(),user.getPassword());
 		return exitUser;
 	}
 
