@@ -40,7 +40,7 @@ public class LoginServlet extends HttpServlet {
 				request.setAttribute("loginmessage", "username or password error");
 				request.getRequestDispatcher("/index.jsp").forward(request, response);
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
