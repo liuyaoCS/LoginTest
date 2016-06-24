@@ -44,15 +44,19 @@ public class LoginDao {
 		if(rSet.next()){
 			exitUser=new User(rSet.getString("name"),rSet.getString("password"));
 		}
+		rSet.close();
+		statement.close();
+		connection.close();
+
 		return exitUser;
 	}
 
 	private User PrepareStatement(User user, User exitUser) throws SQLException {
 		String sql="select * from userAccount where name=? and password=?";
 		PreparedStatement statement= (PreparedStatement)JdbcUtil.getPrepareStateMent(sql);
-		statement.setString(1, user.getUsername());
-		statement.setString(2, user.getPassword());
 		if(statement!=null){
+			statement.setString(1, user.getUsername());
+			statement.setString(2, user.getPassword());
 			ResultSet rSet=statement.executeQuery();
 			if(rSet.next()){
 				exitUser=new User(rSet.getString("name"),rSet.getString("password"));
