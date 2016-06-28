@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,11 +28,20 @@ public class LoginServlet extends HttpServlet {
 		String username=request.getParameter("username");
 		String password=request.getParameter("password");
 		
+		
 		User user=new User(username,password);
 		
 		try {
 			User exitUser=new LoginService().login(user);
 			if(exitUser!=null){
+				//auto login
+				String autologin=request.getParameter("autologin");
+				if(autologin!=null && autologin.equals("ok")){
+					Cookie cookie=new Cookie("autologin", exitUser.getUsername()+":"+exitUser.getPassword());
+					cookie.setMaxAge(60*60*24);
+					cookie.setPath("/");
+					response.addCookie(cookie);	
+				}
 				//response.getWriter().println("username:"+exitUser.getUsername());
 				request.getSession().setAttribute("user", exitUser);
 				request.getRequestDispatcher("/account.jsp").forward(request, response);

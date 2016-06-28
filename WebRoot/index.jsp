@@ -9,6 +9,7 @@
    <form action="/UserSystem/LoginServlet" method="post">
    	username:<input type="text" name="username"></br>
    	password:<input type="text" name="password"></br>
+   	<input type="checkbox" name="autologin" value="ok">auto login</br>
    	<input type="submit" value="submit">
    </form>
    <%--
